@@ -1,6 +1,6 @@
 "use client";
 import { endOfTomorrow, format } from "date-fns";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -23,6 +23,7 @@ import { Button } from "../ui/button";
 import { Calendar } from "../ui/calendar";
 import { CalendarIcon } from "lucide-react";
 import { Input } from "../ui/input";
+import { Category } from "@/db/schema";
 
 const transactionFormSchema = z.object({
   transactionType: z.enum(["income", "expense"]),
@@ -39,7 +40,11 @@ const transactionFormSchema = z.object({
 
 type TransactionFormSchema = z.infer<typeof transactionFormSchema>;
 
-export function TransactionForm() {
+type Props = {
+  categories: Category[];
+};
+
+export function TransactionForm({ categories }: Props) {
   const form = useForm<TransactionFormSchema>({
     resolver: zodResolver(transactionFormSchema),
     defaultValues: {
@@ -51,7 +56,15 @@ export function TransactionForm() {
     },
   });
 
-  const onSubmit = async (data: TransactionFormSchema) => {};
+  const transactionType = useWatch({
+    control: form.control,
+    name: "transactionType",
+  });
+  const filteredCategories = categories.filter(c => c.type === transactionType);
+
+  const onSubmit = async (data: TransactionFormSchema) => {
+    console.log(data);
+  };
 
   return (
     <Form {...form}>
@@ -65,7 +78,13 @@ export function TransactionForm() {
                 <FormItem>
                   <FormLabel>Transaction Type</FormLabel>
                   <FormControl>
-                    <Select onValueChange={field.onChange} value={field.value}>
+                    <Select
+                      onValueChange={value => {
+                        field.onChange(value);
+                        form.setValue("categoryId", 0);
+                      }}
+                      value={field.value}
+                    >
                       <SelectTrigger className="w-full">
                         <SelectValue />
                       </SelectTrigger>
@@ -90,13 +109,19 @@ export function TransactionForm() {
                   <FormLabel>Category</FormLabel>
                   <FormControl>
                     <Select
-                      onValueChange={field.onChange}
-                      value={String(field.value)}
+                      value={field.value ? field.value.toString() : ""}
+                      onValueChange={value => field.onChange(+value)}
                     >
                       <SelectTrigger className="w-full">
                         <SelectValue />
                       </SelectTrigger>
-                      <SelectContent>{/* todo from db  */}</SelectContent>
+                      <SelectContent>
+                        {filteredCategories.map(c => (
+                          <SelectItem key={c.id} value={c.id.toString()}>
+                            {c.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
                     </Select>
                   </FormControl>
                   <FormMessage></FormMessage>
@@ -155,7 +180,11 @@ export function TransactionForm() {
                 <FormItem>
                   <FormLabel>Amount</FormLabel>
                   <FormControl>
-                    <Input {...field} type="number" />
+                    <Input
+                      {...field}
+                      type="number"
+                      onChange={e => field.onChange(+e.target.value)}
+                    />
                   </FormControl>
                   <FormMessage></FormMessage>
                 </FormItem>

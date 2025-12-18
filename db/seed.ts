@@ -57,7 +57,6 @@ const data: CategoryInsert[] = [
   },
 ];
 
-async function main() {
+(async () => {
   await db.insert(categoriesTable).values(data);
-}
-main();
+})();

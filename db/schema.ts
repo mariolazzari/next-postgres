@@ -7,6 +7,7 @@ export const categoriesTable = pgTable("categories", {
     enum: ["income", "expense"],
   }).notNull(),
 });
+export type Category = typeof categoriesTable.$inferSelect;
 
 export const transactionsSchema = pgTable("transactions", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
