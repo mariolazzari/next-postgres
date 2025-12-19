@@ -25,7 +25,7 @@ import { CalendarIcon } from "lucide-react";
 import { Input } from "../ui/input";
 import { Category } from "@/db/schema";
 
-const transactionFormSchema = z.object({
+export const transactionFormSchema = z.object({
   transactionType: z.enum(["income", "expense"]),
   categoryId: z.number().positive("Please select a category"),
   transactionDate: z
@@ -38,13 +38,14 @@ const transactionFormSchema = z.object({
     .max(300, "Description must contain a maximun of 300 chars"),
 });
 
-type TransactionFormSchema = z.infer<typeof transactionFormSchema>;
+export type TransactionFormSchema = z.infer<typeof transactionFormSchema>;
 
 type Props = {
   categories: Category[];
+  onSubmit: (data: TransactionFormSchema) => Promise<void>;
 };
 
-export function TransactionForm({ categories }: Props) {
+export function TransactionForm({ categories, onSubmit }: Props) {
   const form = useForm<TransactionFormSchema>({
     resolver: zodResolver(transactionFormSchema),
     defaultValues: {
@@ -61,10 +62,6 @@ export function TransactionForm({ categories }: Props) {
     name: "transactionType",
   });
   const filteredCategories = categories.filter(c => c.type === transactionType);
-
-  const onSubmit = async (data: TransactionFormSchema) => {
-    console.log(data);
-  };
 
   return (
     <Form {...form}>

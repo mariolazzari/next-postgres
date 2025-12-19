@@ -9,7 +9,7 @@ export const categoriesTable = pgTable("categories", {
 });
 export type Category = typeof categoriesTable.$inferSelect;
 
-export const transactionsSchema = pgTable("transactions", {
+export const transactionsTable = pgTable("transactions", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
   userId: text("user_id").notNull(),
   description: text().notNull(),
@@ -19,3 +19,4 @@ export const transactionsSchema = pgTable("transactions", {
     .references(() => categoriesTable.id)
     .notNull(),
 });
+export type TransactionInsert = typeof transactionsTable.$inferInsert;
