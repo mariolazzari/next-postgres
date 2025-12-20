@@ -1,3 +1,4 @@
+import { Badge } from "@/components/ui/badge";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -8,6 +9,17 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { getTransactionsByMonth } from "@/data/getTransactionsByMonth";
+import { format } from "date-fns";
+import { PencilIcon } from "lucide-react";
 import Link from "next/link";
 import z from "zod";
 
@@ -33,8 +45,8 @@ type Props = {
 const TransactionPage = async ({ searchParams }: Props) => {
   const searchParamsValues = await searchParams;
   const { month, year } = searchSchema.parse(searchParamsValues);
-  const selectedDate = new Date(year, month - 1, 1);
-  //const transactions = await getTransactionsByMonth({ month, year });
+  // const selectedDate = new Date(year, month - 1, 1);
+  const transactions = await getTransactionsByMonth({ month, year });
   //const yearsRange = await getTransactionYearsRange();
 
   return (
@@ -66,12 +78,12 @@ const TransactionPage = async ({ searchParams }: Props) => {
           <Button asChild>
             <Link href="/dashboard/transactions/new">New Transaction</Link>
           </Button>
-          {/* {!transactions?.length && (
+          {!transactions?.length && (
             <p className="text-center py-10 text-lg text-muted-foreground">
               There are no transactions for this month
             </p>
-          )} */}
-          {/* {!!transactions?.length && (
+          )}
+          {!!transactions?.length && (
             <Table className="mt-4">
               <TableHeader>
                 <TableRow>
@@ -84,7 +96,7 @@ const TransactionPage = async ({ searchParams }: Props) => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {transactions.map((transaction) => (
+                {transactions.map(transaction => (
                   <TableRow key={transaction.id}>
                     <TableCell>
                       {format(transaction.transactionDate, "do MMM yyyy")}
@@ -102,8 +114,8 @@ const TransactionPage = async ({ searchParams }: Props) => {
                       </Badge>
                     </TableCell>
                     <TableCell>{transaction.category}</TableCell>
-                    <TableCell>
-                      £{numeral(transaction.amount).format("0,0[.]00")}
+                    <TableCell className="text-right">
+                      {transaction.amount}
                     </TableCell>
                     <TableCell className="text-right">
                       <Button
@@ -123,7 +135,7 @@ const TransactionPage = async ({ searchParams }: Props) => {
                 ))}
               </TableBody>
             </Table>
-          )} */}
+          )}
         </CardContent>
       </Card>
     </div>
