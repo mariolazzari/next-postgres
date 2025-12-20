@@ -13,6 +13,7 @@ import {
 import { ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import { UserDropdown } from "@/components/buttons/UserDropwdown";
+import { Toaster } from "@/components/ui/sonner";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -59,6 +60,7 @@ export default function RootLayout({
             </div>
           </nav>
           {children}
+          <Toaster richColors />
         </body>
       </html>
     </ClerkProvider>

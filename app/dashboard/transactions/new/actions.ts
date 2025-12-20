@@ -12,7 +12,6 @@ export const createTransaction = async (data: {
   categoryId: number;
 }) => {
   const { userId } = await auth();
-
   if (!userId) {
     return {
       error: true,
@@ -21,7 +20,6 @@ export const createTransaction = async (data: {
   }
 
   const validation = transactionSchema.safeParse(data);
-
   if (!validation.success) {
     return {
       error: true,

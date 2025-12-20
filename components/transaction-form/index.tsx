@@ -66,7 +66,10 @@ export function TransactionForm({ categories, onSubmit }: Props) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
-        <fieldset className="grid grid-cols-2 gap-y-5 gap-x-2">
+        <fieldset
+          className="grid grid-cols-2 gap-y-5 gap-x-2"
+          disabled={form.formState.isSubmitting}
+        >
           <FormField
             control={form.control}
             name="transactionType"
@@ -190,7 +193,10 @@ export function TransactionForm({ categories, onSubmit }: Props) {
           />
         </fieldset>
 
-        <fieldset className="mt-5 flex flex-col gap-5">
+        <fieldset
+          className="mt-5 flex flex-col gap-5"
+          disabled={form.formState.isSubmitting}
+        >
           <FormField
             control={form.control}
             name="description"
