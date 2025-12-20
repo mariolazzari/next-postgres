@@ -22,6 +22,8 @@ import { format } from "date-fns";
 import { PencilIcon } from "lucide-react";
 import Link from "next/link";
 import z from "zod";
+import Filters from "./filters";
+import { getTransactionYearsRange } from "@/data/getTransactionYearsRange";
 
 const today = new Date();
 
@@ -45,9 +47,9 @@ type Props = {
 const TransactionPage = async ({ searchParams }: Props) => {
   const searchParamsValues = await searchParams;
   const { month, year } = searchSchema.parse(searchParamsValues);
-  // const selectedDate = new Date(year, month - 1, 1);
+  const selectedDate = new Date(year, month - 1, 1);
   const transactions = await getTransactionsByMonth({ month, year });
-  //const yearsRange = await getTransactionYearsRange();
+  const yearsRange = await getTransactionYearsRange();
 
   return (
     <div className="max-w-7xl mx-auto py-10">
@@ -68,9 +70,9 @@ const TransactionPage = async ({ searchParams }: Props) => {
       <Card className="mt-4">
         <CardHeader>
           <CardTitle className="flex justify-between">
-            {/* <span>{format(selectedDate, "MMM yyyy")} Transactions</span> */}
+            <span>{format(selectedDate, "MMM yyyy")} Transactions</span>
             <div>
-              {/* <Filters year={year} month={month} yearsRange={yearsRange} /> */}
+              <Filters year={year} month={month} yearsRange={yearsRange} />
             </div>
           </CardTitle>
         </CardHeader>
