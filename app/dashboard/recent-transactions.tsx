@@ -13,8 +13,9 @@ import { getRecentTransactions } from "@/data/getRecentTransactions";
 import { format } from "date-fns";
 import Link from "next/link";
 
-export default async function RecentTransactions() {
+async function RecentTransactions() {
   const transactions = await getRecentTransactions();
+
   return (
     <Card>
       <CardHeader>
@@ -77,3 +78,5 @@ export default async function RecentTransactions() {
     </Card>
   );
 }
+
+export default RecentTransactions;
